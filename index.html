@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>VLE QBANKS - Medical Quiz Platform</title>
+    <meta name="description" content="Test your medical knowledge with our comprehensive question banks">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Preconnect to Google Sheets API -->
+    <link rel="preconnect" href="https://docs.google.com">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner hidden" aria-hidden="true">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading question banks...</p>
+    </div>
+
+    <!-- Error Message Container -->
+    <div id="error-message" class="error-message hidden" role="alert"></div>
+
+    <header aria-label="Application header">
+        <div class="header-top">
+            <h1>VLE QBANKS</h1>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <span class="theme-icon">🌓</span>
+            </button>
+        </div>
+        <p class="tagline">Veterinary Licensure Examination Question Banks</p>
+    </header>
+
+    <main class="subject-grid" aria-busy="false">
+        <!-- Anatomy -->
+        <button class="subject-btn" data-subject="anatomy" data-sheet="Anatomy" aria-labelledby="anatomy-title">
+            <div class="button-content">
+                <img src="icons/anatomy.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="anatomy-title">Anatomy</span>
+            </div>
+        </button>
+
+        <!-- Physiology -->
+        <button class="subject-btn" data-subject="physiology" data-sheet="Physiology" aria-labelledby="physiology-title">
+            <div class="button-content">
+                <img src="icons/physiology.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="physiology-title">Physiology</span>
+            </div>
+        </button>
+
+        <!-- Parasitology -->
+        <button class="subject-btn" data-subject="parasitology" data-sheet="Parasitology" aria-labelledby="parasitology-title">
+            <div class="button-content">
+                <img src="icons/parasitology.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="parasitology-title">Parasitology</span>
+            </div>
+        </button>
+
+        <!-- Pharmacology -->
+        <button class="subject-btn" data-subject="pharmacology" data-sheet="Pharmacology" aria-labelledby="pharmacology-title">
+            <div class="button-content">
+                <img src="icons/pharmacology.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="pharmacology-title">Pharmacology</span>
+            </div>
+        </button>
+
+        <!-- Pathology -->
+        <button class="subject-btn" data-subject="pathology" data-sheet="Pathology" aria-labelledby="pathology-title">
+            <div class="button-content">
+                <img src="icons/pathology.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="pathology-title">Pathology</span>
+            </div>
+        </button>
+
+        <!-- Zootechnics -->
+        <button class="subject-btn" data-subject="zootechnics" data-sheet="Zootechnics" aria-labelledby="zootechnics-title">
+            <div class="button-content">
+                <img src="icons/zootechnics.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="zootechnics-title">Zootechnics</span>
+            </div>
+        </button>
+
+        <!-- Microbiology & Public Health -->
+        <button class="subject-btn" data-subject="microbiology&ph" data-sheet="Microbiology_PH" aria-labelledby="microbiology-title">
+            <div class="button-content">
+                <img src="icons/microbiology&ph.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="microbiology-title">Microbiology & Public Health</span>
+            </div>
+        </button>
+
+        <!-- Medicine -->
+        <button class="subject-btn" data-subject="medicine" data-sheet="Medicine" aria-labelledby="medicine-title">
+            <div class="button-content">
+                <img src="icons/medicine.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="medicine-title">Medicine</span>
+            </div>
+        </button>
+
+        <!-- Surgery -->
+        <button class="subject-btn" data-subject="surgery" data-sheet="Surgery" aria-labelledby="surgery-title">
+            <div class="button-content">
+                <img src="icons/surgery.png" alt="" class="subject-icon" loading="lazy">
+                <span class="subject-title" id="surgery-title">Surgery</span>
+            </div>
+        </button>
+    </main>
+
+    <footer aria-label="Footer">
+        <div class="footer-content">
+            <p>© <span id="current-year"></span> VLE QBANKS. All rights reserved.</p>
+            <nav aria-label="Secondary navigation">
+                <ul>
+                    <li><a href="#" aria-label="About us">About</a></li>
+                    <li><a href="#" aria-label="Contact us">Contact</a></li>
+                    <li><a href="#" aria-label="Privacy policy">Privacy</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="app.js" defer></script>
+    
+    <!-- Inline script for critical initializations -->
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // Show loading state while resources are loading
+        document.addEventListener('DOMContentLoaded', () => {
+            const spinner = document.getElementById('loading-spinner');
+            spinner.classList.remove('hidden');
+            
+            window.addEventListener('load', () => {
+                spinner.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

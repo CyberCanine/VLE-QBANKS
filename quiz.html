@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - VLE QBANKS</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <div id="loading-spinner" class="loading-spinner" aria-hidden="true">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading questions...</p>
+    </div>
+
+    <div id="error-message" class="error-message hidden" role="alert"></div>
+
+    <header aria-label="Quiz header">
+        <div class="header-top">
+            <h1 id="quiz-subject" aria-live="polite"></h1>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <span class="theme-icon">🌓</span>
+            </button>
+        </div>
+        <div class="header-info">
+            <div class="timer-container">
+                <span aria-hidden="true">⏱️</span>
+                <span id="timer">00:00:00</span>
+            </div>
+            <div class="score-container">
+                <span aria-hidden="true">🏆</span>
+                <span id="score">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="quiz-container" aria-live="polite">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar" role="progressbar" 
+                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+
+        <div class="question-container" role="region" aria-labelledby="question">
+            <div class="question-meta">
+                <span class="question-number">
+                    Question <span id="current-number">1</span> of <span id="total-questions">0</span>
+                </span>
+            </div>
+            <h2 id="question" tabindex="0"></h2>
+        </div>
+        
+        <div class="choices-container" id="choices" role="group" aria-labelledby="question"></div>
+
+        <div id="feedback" class="feedback hidden" role="alert">
+            <p id="feedback-text"></p>
+            <button id="continue-btn" class="continue-btn">Continue</button>
+        </div>
+
+        <div class="action-buttons">
+            <button id="prev-btn" class="nav-btn" disabled aria-label="Previous question">← Previous</button>
+            <button id="submit-btn" class="submit-btn" disabled aria-label="Submit answer">Submit</button>
+            <button id="next-btn" class="nav-btn" disabled aria-label="Next question">Next →</button>
+        </div>
+    </main>
+
+    <div id="end-screen" class="end-screen hidden" aria-live="polite">
+        <div class="end-content">
+            <h2>Quiz Completed!</h2>
+            <div class="results-container">
+                <p>Your score: <span id="final-score">0</span>/<span id="max-score">0</span></p>
+                <p>Time taken: <span id="final-time">00:00:00</span></p>
+                <p>Accuracy: <span id="accuracy">0</span>%</p>
+            </div>
+            <div class="end-buttons">
+                <button id="review-btn" class="end-btn">Review Answers</button>
+                <button id="new-quiz-btn" class="end-btn">New Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
