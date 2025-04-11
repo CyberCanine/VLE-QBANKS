@@ -700,6 +700,21 @@
 .feature-item, .privacy-section {
   margin: 1.5rem 0;
 }
+
+.retry-btn {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius-sm);
+  margin-top: var(--space-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.retry-btn:hover {
+  background: var(--accent-secondary);
+}
   
   /* ===== Responsive Adjustments ===== */
   @media (max-width: 992px) {

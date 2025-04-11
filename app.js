@@ -36,7 +36,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // ===== CSV PARSING =====
+    // ===== CLOUDFLARE WORKER INTEGRATION =====
+    async function loadQuestions(sheetId, sheetName) {
+        try {
+            const workerUrl = `https://hello.vleqbanks7151.workers.dev/?sheetId=${sheetId}&sheetName=${encodeURIComponent(sheetName)}`;
+            console.log('Fetching from:', workerUrl); // Debug log
+            
+            const response = await fetch(workerUrl);
+            
+            if (!response.ok) {
+                throw new Error(`Failed to fetch: ${response.status}`);
+            }
+            
+            const csvData = await response.text();
+            
+            if (!csvData.includes(',')) {
+                throw new Error('Invalid CSV data received');
+            }
+            
+            return parseCSV(csvData);
+        } catch (error) {
+            console.error('Load Questions Error:', error);
+            throw new Error('Failed to load questions. Please try again later.');
+        }
+    }
+
     async function loadQuestionsWithRetry(sheetId, sheetName, maxRetries = 3) {
         let lastError;
         for (let i = 0; i < maxRetries; i++) {
@@ -48,13 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
             }
         }
-        throw lastError || new Error('Failed to load questions after multiple attempts');
-    }
-
-    async function loadQuestions(sheetId, sheetName) {
-        const response = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`);
-        if (!response.ok) throw new Error(`Server returned ${response.status}`);
-        return parseCSV(await response.text());
+        throw lastError || new Error('Failed after multiple attempts');
     }
 
     function parseCSV(csv) {
@@ -265,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
+    
     // ===== QUIZ STATE MANAGEMENT =====
     const state = {
         currentQuestionIndex: 0,
@@ -449,10 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = JSON.parse(localStorage.getItem('quizResults'));
         if (!results) return;
         
-        // 1. Store the original end screen content and event listeners
-        const originalEndContent = elements.endScreen.querySelector('.end-content').outerHTML;
-        
-        // 2. Create review screen
         elements.endScreen.innerHTML = `
             <div class="end-content">
                 <h2>Quiz Review: ${results.subject}</h2>
@@ -481,33 +495,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
-        // 3. Handle back button click
         document.getElementById('back-to-results').addEventListener('click', () => {
-            // Restore original content
-            elements.endScreen.innerHTML = originalEndContent;
-            
-            // Reattach event listeners properly
-            setupEndScreenListeners();
+            window.location.reload();
         });
-    }
-    
-    // New function to handle end screen button setup
-    function setupEndScreenListeners() {
-        elements.reviewBtn = document.getElementById('review-btn');
-        elements.newQuizBtn = document.getElementById('new-quiz-btn');
-        
-        elements.reviewBtn.addEventListener('click', reviewQuiz);
-        elements.newQuizBtn.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
-    }
-    
-    // Initialize this when first creating the end screen
-    function showResultsScreen() {
-        // ... existing results screen setup code ...
-        
-        // After creating the end screen HTML:
-        setupEndScreenListeners();
     }
 
     // ===== DOM ELEMENTS =====
@@ -590,10 +580,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 elements.quizSubject.textContent = quizSubject.replace(/\b\w/g, l => l.toUpperCase());
-
+                elements.loadingSpinner.querySelector('.loading-text').textContent = 
+                    `Loading ${quizSubject} questions...`;
+                
                 const questions = await loadQuestionsWithRetry(SHEET_ID, sheetName, 3);
+                
                 if (!questions || questions.length === 0) {
-                    throw new Error('The selected question bank appears to be empty or improperly formatted');
+                    throw new Error('The question bank is empty or formatted incorrectly');
                 }
 
                 state.questions = questions;
@@ -612,7 +605,21 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 console.error('Quiz initialization failed:', error);
                 showError(error.message);
-                setTimeout(() => window.location.href = 'index.html', 5000);
+                
+                // Add retry button
+                const retryBtn = document.createElement('button');
+                retryBtn.textContent = 'Retry';
+                retryBtn.className = 'retry-btn';
+                retryBtn.addEventListener('click', initQuiz);
+                
+                elements.errorMessage.appendChild(document.createElement('br'));
+                elements.errorMessage.appendChild(retryBtn);
+                
+                setTimeout(() => {
+                    if (!state.quizStarted) {
+                        window.location.href = 'index.html';
+                    }
+                }, 10000);
             } finally {
                 hideLoading();
             }
