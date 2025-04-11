@@ -467,6 +467,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = JSON.parse(localStorage.getItem('quizResults'));
         if (!results) return;
         
+        // 1. Store the original end screen content and event listeners
+        const originalEndContent = elements.endScreen.querySelector('.end-content').outerHTML;
+        
+        // 2. Create review screen
         elements.endScreen.innerHTML = `
             <div class="end-content">
                 <h2>Quiz Review: ${results.subject}</h2>
@@ -495,9 +499,33 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
+        // 3. Handle back button click
         document.getElementById('back-to-results').addEventListener('click', () => {
-            window.location.reload();
+            // Restore original content
+            elements.endScreen.innerHTML = originalEndContent;
+            
+            // Reattach event listeners properly
+            setupEndScreenListeners();
         });
+    }
+    
+    // New function to handle end screen button setup
+    function setupEndScreenListeners() {
+        elements.reviewBtn = document.getElementById('review-btn');
+        elements.newQuizBtn = document.getElementById('new-quiz-btn');
+        
+        elements.reviewBtn.addEventListener('click', reviewQuiz);
+        elements.newQuizBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
+    
+    // Initialize this when first creating the end screen
+    function showResultsScreen() {
+        // ... existing results screen setup code ...
+        
+        // After creating the end screen HTML:
+        setupEndScreenListeners();
     }
 
     // ===== DOM ELEMENTS =====
