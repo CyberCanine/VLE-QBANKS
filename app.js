@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="features-grid">
                         <div class="feature-item">
                             <strong>Version</strong>
-                            <p>1.0.0</p>
+                            <p>1.0.1</p>
                         </div>
                         <div class="feature-item">
                             <strong>Subjects</strong>
@@ -463,151 +463,70 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => elements.errorMessage.classList.add('hidden'), 5000);
     }
 
-    function showEnhancedReview() {
+    function reviewQuiz() {
         const results = JSON.parse(localStorage.getItem('quizResults'));
         if (!results) return;
-      
+        
+        // 1. Store the original end screen content and event listeners
+        const originalEndContent = elements.endScreen.querySelector('.end-content').outerHTML;
+        
+        // 2. Create review screen
         elements.endScreen.innerHTML = `
-          <div class="review-container">
-            <div class="review-header">
-              <h2 class="review-title">Quiz Review</h2>
-              <p class="review-subject">${results.subject}</p>
-              
-              <div class="review-meta">
-                <div class="review-stat">
-                  <div class="review-stat-value">${results.score}/${results.totalQuestions}</div>
-                  <div class="review-stat-label">Score</div>
+            <div class="end-content">
+                <h2>Quiz Review: ${results.subject}</h2>
+                <p class="review-score">Score: ${results.score}/${results.totalQuestions}</p>
+                <div class="review-questions">
+                    ${results.answeredQuestions.map((q, i) => `
+                        <div class="review-item">
+                            <p class="review-question">${i+1}. ${q.question}</p>
+                            <p class="review-answer ${q.isCorrect ? 'review-correct' : 'review-incorrect'}">
+                                Your answer: ${q.selectedAnswer}
+                            </p>
+                            ${!q.isCorrect ? `
+                                <p class="review-correct-answer">
+                                    Correct answer: ${q.correctAnswer}
+                                </p>
+                            ` : ''}
+                            ${q.explanation ? `
+                                <p class="review-explanation">
+                                    <strong>Explanation:</strong> ${q.explanation}
+                                </p>
+                            ` : ''}
+                        </div>
+                    `).join('')}
                 </div>
-                <div class="review-stat">
-                  <div class="review-stat-value">${((results.score/results.totalQuestions)*100).toFixed(1)}%</div>
-                  <div class="review-stat-label">Accuracy</div>
-                </div>
-                <div class="review-stat">
-                  <div class="review-stat-value">${formatTime(results.timeTaken)}</div>
-                  <div class="review-stat-label">Time</div>
-                </div>
-              </div>
+                <button id="back-to-results" class="end-btn">Back to Results</button>
             </div>
-            
-            <div class="filter-tabs">
-              <div class="filter-tab active" data-filter="all">All Questions</div>
-              <div class="filter-tab" data-filter="correct">Correct (${results.score})</div>
-              <div class="filter-tab" data-filter="incorrect">Incorrect (${results.totalQuestions - results.score})</div>
-            </div>
-            
-            <div id="review-questions-container" class="review-questions-container">
-              <!-- Questions will be inserted here -->
-            </div>
-            
-            <div class="review-actions">
-              <div class="review-nav-buttons">
-                <button id="prev-10" class="nav-btn">← 10</button>
-                <button id="prev-question" class="nav-btn">← Prev</button>
-              </div>
-              
-              <div class="review-main-actions">
-                <button id="print-results" class="action-btn">
-                  <span class="icon">🖨️</span> Print
-                </button>
-                <button id="new-quiz-btn" class="action-btn primary">
-                  <span class="icon">🔄</span> New Quiz
-                </button>
-              </div>
-              
-              <div class="review-nav-buttons">
-                <button id="next-question" class="nav-btn">Next →</button>
-                <button id="next-10" class="nav-btn">10 →</button>
-              </div>
-            </div>
-          </div>
         `;
-      
-        // Render first question
-        renderReviewQuestion(results.answeredQuestions, 0);
-      
-        // Setup filter tabs
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-          tab.addEventListener('click', () => {
-            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            const filteredQuestions = filterQuestions(results.answeredQuestions, tab.dataset.filter);
-            renderReviewQuestion(filteredQuestions, 0);
-          });
-        });
-      
-        // Setup navigation
-        let currentQuestionIndex = 0;
-        let currentQuestions = results.answeredQuestions;
         
-        document.getElementById('prev-question').addEventListener('click', () => {
-          if (currentQuestionIndex > 0) {
-            currentQuestionIndex--;
-            renderReviewQuestion(currentQuestions, currentQuestionIndex);
-          }
+        // 3. Handle back button click
+        document.getElementById('back-to-results').addEventListener('click', () => {
+            // Restore original content
+            elements.endScreen.innerHTML = originalEndContent;
+            
+            // Reattach event listeners properly
+            setupEndScreenListeners();
         });
+    }
+    
+    // New function to handle end screen button setup
+    function setupEndScreenListeners() {
+        elements.reviewBtn = document.getElementById('review-btn');
+        elements.newQuizBtn = document.getElementById('new-quiz-btn');
         
-        document.getElementById('next-question').addEventListener('click', () => {
-          if (currentQuestionIndex < currentQuestions.length - 1) {
-            currentQuestionIndex++;
-            renderReviewQuestion(currentQuestions, currentQuestionIndex);
-          }
+        elements.reviewBtn.addEventListener('click', reviewQuiz);
+        elements.newQuizBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
         });
-      
-        // ... other navigation buttons ...
-      
-        document.getElementById('print-results').addEventListener('click', window.print);
-        document.getElementById('new-quiz-btn').addEventListener('click', () => {
-          window.location.href = 'index.html';
-        });
-      }
-      
-      function renderReviewQuestion(questions, index) {
-        const container = document.getElementById('review-questions-container');
-        if (!questions.length) {
-          container.innerHTML = `<div class="no-questions">No questions match the current filter</div>`;
-          return;
-        }
+    }
+    
+    // Initialize this when first creating the end screen
+    function showResultsScreen() {
+        // ... existing results screen setup code ...
         
-        const q = questions[index];
-        container.innerHTML = `
-          <div class="review-item ${q.isCorrect ? 'correct' : 'incorrect'}">
-            <div class="question-number">Question ${index + 1} of ${questions.length}</div>
-            <div class="review-question">${q.question}</div>
-            
-            <div class="review-answer-section">
-              <div class="answer-label your-answer">Your Answer</div>
-              <div class="review-answer ${q.isCorrect ? 'correct-answer' : 'incorrect-answer'}">
-                ${q.selectedAnswer}
-              </div>
-            </div>
-            
-            ${!q.isCorrect ? `
-              <div class="review-answer-section">
-                <div class="answer-label correct-answer">Correct Answer</div>
-                <div class="review-answer correct-answer">
-                  ${q.correctAnswer}
-                </div>
-              </div>
-            ` : ''}
-            
-            ${q.explanation ? `
-              <div class="review-explanation">
-                <div class="review-explanation-title">Explanation</div>
-                <div class="explanation-text">${q.explanation}</div>
-              </div>
-            ` : ''}
-          </div>
-        `;
-      }
-      
-      function filterQuestions(questions, filter) {
-        switch(filter) {
-          case 'correct': return questions.filter(q => q.isCorrect);
-          case 'incorrect': return questions.filter(q => !q.isCorrect);
-          default: return questions;
-        }
-      }
+        // After creating the end screen HTML:
+        setupEndScreenListeners();
+    }
 
     // ===== DOM ELEMENTS =====
     const elements = {
