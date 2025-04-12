@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="features-grid">
                         <div class="feature-item">
                             <strong>Version</strong>
-                            <p>1.0.1</p>
+                            <p>1.0.0</p>
                         </div>
                         <div class="feature-item">
                             <strong>Subjects</strong>
