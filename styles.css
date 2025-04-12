@@ -98,6 +98,10 @@
   .theme-toggle:hover {
     transform: scale(1.1);
   }
+
+  .theme-toggle:active {
+    transform: scale(0.9);
+  }
   
   /* ===== Header Styles ===== */
   header {
@@ -651,7 +655,7 @@
 
 .modal-form label {
   display: block;
-  margin-bottom: var(--space-xs);
+  margin-bottom: none;
   font-weight: 500;
   color: var(--text-primary);
 }
@@ -659,7 +663,7 @@
 .modal-form input,
 .modal-form textarea {
   width: 100%;
-  padding: var(--space-sm);
+  padding: var(--space-xs);
   border: 1px solid var(--bg-quaternary);
   border-radius: var(--border-radius-sm);
   background: var(--bg-primary);
@@ -697,9 +701,13 @@
   background: var(--accent-secondary);
 }
 
-.feature-item, .privacy-section {
-  margin: 1.5rem 0;
+.features-grid strong, p{
+  padding-bottom: 1rem;
 }
+
+/* .features-grid p {
+  padding-right: 1rem;
+}  */
 
 .retry-btn {
   background: var(--accent-primary);
@@ -715,14 +723,6 @@
 .retry-btn:hover {
   background: var(--accent-secondary);
 }
-
-.feature-item, .privacy-section {
-  margin-bottom: 1.5rem;
-}
-
-.feature-item {
-    margin-top: 1.5rem;
-  }
   
   /* ===== Responsive Adjustments ===== */
   @media (max-width: 992px) {
@@ -770,11 +770,22 @@
 
     .modal-content {
       max-height: 85vh;
+      max-width: 600px;
     }
     
     .modal-header,
     .modal-body {
       padding: var(--space-md);
+    }
+
+    .modal-form textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    
+    .theme-toggle {
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
     }
   }
   
