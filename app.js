@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadQuestions(sheetId, sheetName) {
         try {
             const workerUrl = `https://hello.vleqbanks7151.workers.dev/?sheetId=${sheetId}&sheetName=${encodeURIComponent(sheetName)}`;
-            console.log('Fetching from:', workerUrl); // Debug log
+            console.log('Fetching from:', workerUrl);
             
             const response = await fetch(workerUrl);
             
@@ -172,12 +172,10 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         
         document.body.appendChild(modal);
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
+        document.body.style.overflow = 'hidden';
         
-        // Trigger animation
         setTimeout(() => modal.classList.add('active'), 10);
         
-        // Close functionality
         const closeModal = () => {
             modal.classList.remove('active');
             setTimeout(() => {
@@ -188,28 +186,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         modal.querySelector('.close-modal').addEventListener('click', closeModal);
         
-        // Close when clicking outside content
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
         
-        // Close with Escape key
         document.addEventListener('keydown', function escClose(e) {
             if (e.key === 'Escape') closeModal();
         });
         
-        // Handle form submission
         if (hasForm) {
             const form = modal.querySelector('.modal-form');
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                // Here you would normally send the form data
                 showError('Message sent successfully! (This is a demo)');
                 closeModal();
             });
         }
         
-        // Focus trap for accessibility
         const focusableElements = modal.querySelectorAll('button, [href], input, textarea');
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
@@ -229,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Updated footer link implementation
+    // Footer links
     document.querySelectorAll('footer a').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -241,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="features-grid">
                         <div class="feature-item">
                             <strong>Version</strong>
-                            <p>1.0.2</p>
+                            <p>1.2.0</p>
                         </div>
                         <div class="feature-item">
                             <strong>Subjects</strong>
@@ -298,7 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedChoice: null,
         currentChoices: [],
         quizStarted: false,
-        quizEnded: false
+        quizEnded: false,
+        hasAnswered: false
     };
 
     // ===== QUIZ FUNCTIONS =====
@@ -317,12 +311,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showQuestion() {
+        state.hasAnswered = false;
         state.selectedChoice = null;
+        
+        // Reset UI state
         elements.submitBtn.disabled = true;
-        elements.submitBtn.style.display = 'block';
-        elements.continueBtn.style.display = 'none';
-        elements.choicesContainer.innerHTML = '';
+        elements.submitBtn.textContent = "Submit";
         elements.feedback.classList.add('hidden');
+        
+        // Clear previous choices
+        elements.choicesContainer.innerHTML = '';
 
         const currentQuestion = state.shuffledQuestions[state.currentQuestionIndex];
         elements.questionElement.textContent = currentQuestion.question;
@@ -352,6 +350,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function selectChoice(button, choice) {
+        if (state.hasAnswered) return;
+        
         document.querySelectorAll('.choice-btn').forEach(btn => {
             btn.classList.remove('selected');
             btn.setAttribute('aria-checked', 'false');
@@ -360,12 +360,17 @@ document.addEventListener('DOMContentLoaded', () => {
         button.classList.add('selected');
         button.setAttribute('aria-checked', 'true');
         state.selectedChoice = choice;
+        
+        // Enable submit button
         elements.submitBtn.disabled = false;
     }
 
     function checkAnswer() {
-        if (!state.selectedChoice) return;
-
+        if (!state.selectedChoice || state.hasAnswered) return;
+        
+        state.hasAnswered = true;
+        
+        // Disable all choice buttons
         document.querySelectorAll('.choice-btn').forEach(btn => {
             btn.disabled = true;
         });
@@ -374,6 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentQuestion = state.shuffledQuestions[state.currentQuestionIndex];
         const correctChoice = state.currentChoices.find(c => c.correct);
         
+        // Mark correct/incorrect
         if (state.selectedChoice.correct) {
             selectedButton.classList.add('correct');
             state.score++;
@@ -389,6 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showFeedback(false, currentQuestion.explanation);
         }
 
+        // Store answer data
         state.answeredQuestions.push({
             question: currentQuestion.question,
             selectedAnswer: state.selectedChoice.text,
@@ -397,8 +404,18 @@ document.addEventListener('DOMContentLoaded', () => {
             explanation: currentQuestion.explanation
         });
 
-        elements.submitBtn.style.display = 'none';
-        elements.continueBtn.style.display = 'block';
+        // Transform submit button to continue button
+        elements.submitBtn.textContent = "Next";
+        elements.submitBtn.removeEventListener('click', checkAnswer);
+        elements.submitBtn.addEventListener('click', continueToNextQuestion);
+    }
+
+    function continueToNextQuestion() {
+        elements.feedback.classList.add('hidden');
+        elements.submitBtn.textContent = "Submit";
+        elements.submitBtn.removeEventListener('click', continueToNextQuestion);
+        elements.submitBtn.addEventListener('click', checkAnswer);
+        nextQuestion();
     }
 
     function showFeedback(isCorrect, explanation) {
@@ -411,7 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.feedbackText.innerHTML = feedbackMessage;
         elements.feedback.classList.remove('hidden');
         elements.feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
-        elements.continueBtn.focus();
     }
 
     function nextQuestion() {
@@ -444,6 +460,9 @@ document.addEventListener('DOMContentLoaded', () => {
             subject: localStorage.getItem('selectedSubject'),
             date: new Date().toISOString()
         }));
+
+        // Setup end screen listeners
+        setupEndScreenListeners();
     }
 
     // ===== UI FUNCTIONS =====
@@ -467,10 +486,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = JSON.parse(localStorage.getItem('quizResults'));
         if (!results) return;
         
-        // 1. Store the original end screen content and event listeners
         const originalEndContent = elements.endScreen.querySelector('.end-content').outerHTML;
         
-        // 2. Create review screen
         elements.endScreen.innerHTML = `
             <div class="end-content">
                 <h2>Quiz Review: ${results.subject}</h2>
@@ -495,37 +512,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `).join('')}
                 </div>
-                <button id="back-to-results" class="end-btn">Back to Results</button>
+                <button id="back-to-results" class="quiz-btn">Back to Results</button>
             </div>
         `;
         
-        // 3. Handle back button click
         document.getElementById('back-to-results').addEventListener('click', () => {
-            // Restore original content
             elements.endScreen.innerHTML = originalEndContent;
-            
-            // Reattach event listeners properly
             setupEndScreenListeners();
         });
     }
     
-    // New function to handle end screen button setup
     function setupEndScreenListeners() {
-        elements.reviewBtn = document.getElementById('review-btn');
-        elements.newQuizBtn = document.getElementById('new-quiz-btn');
-        
-        elements.reviewBtn.addEventListener('click', reviewQuiz);
-        elements.newQuizBtn.addEventListener('click', () => {
+        document.getElementById('review-btn').addEventListener('click', reviewQuiz);
+        document.getElementById('new-quiz-btn').addEventListener('click', () => {
             window.location.href = 'index.html';
         });
-    }
-    
-    // Initialize this when first creating the end screen
-    function showResultsScreen() {
-        // ... existing results screen setup code ...
-        
-        // After creating the end screen HTML:
-        setupEndScreenListeners();
     }
 
     // ===== DOM ELEMENTS =====
@@ -541,38 +542,37 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar: document.getElementById('progress-bar'),
         feedback: document.getElementById('feedback'),
         feedbackText: document.getElementById('feedback-text'),
-        continueBtn: document.getElementById('continue-btn'),
         endScreen: document.getElementById('end-screen'),
         finalScore: document.getElementById('final-score'),
         maxScore: document.getElementById('max-score'),
         finalTime: document.getElementById('final-time'),
         accuracy: document.getElementById('accuracy'),
-        reviewBtn: document.getElementById('review-btn'),
-        newQuizBtn: document.getElementById('new-quiz-btn'),
         loadingSpinner: document.getElementById('loading-spinner'),
         errorMessage: document.getElementById('error-message')
     };
 
     // ===== EVENT LISTENERS =====
     function setupEventListeners() {
+        // Submit button starts with checkAnswer handler
         elements.submitBtn.addEventListener('click', checkAnswer);
-        elements.continueBtn.addEventListener('click', () => {
-            elements.feedback.classList.add('hidden');
-            nextQuestion();
-        });
-        elements.reviewBtn.addEventListener('click', reviewQuiz);
-        elements.newQuizBtn.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
-
+        
+        // Keyboard support
         document.addEventListener('keydown', (e) => {
             if (state.quizEnded) return;
             
+            // Enter key submits answer or continues
             if (e.key === 'Enter') {
-                if (!elements.submitBtn.disabled && elements.submitBtn.style.display !== 'none') {
+                if (!elements.submitBtn.disabled) {
                     elements.submitBtn.click();
-                } else if (elements.continueBtn.style.display !== 'none') {
-                    elements.continueBtn.click();
+                }
+            }
+            
+            // Number keys select answers (1-5)
+            if (e.key >= '1' && e.key <= '5') {
+                const index = parseInt(e.key) - 1;
+                const buttons = elements.choicesContainer.querySelectorAll('.choice-btn');
+                if (buttons[index] && !state.hasAnswered) {
+                    buttons[index].click();
                 }
             }
         });
