@@ -102,6 +102,10 @@
   .theme-toggle:hover {
     transform: scale(1.1);
   }
+
+  .theme-toggle:active {
+    transform: scale(0.9);
+  }
   
   /* ===== Header Styles ===== */
   header {
@@ -828,7 +832,7 @@
 
 .modal-form label {
   display: block;
-  margin-bottom: var(--space-xs);
+  margin-bottom: none;
   font-weight: 500;
   color: var(--text-primary);
 }
@@ -872,9 +876,9 @@
 
 .form-submit-btn:hover {
   background: var(--accent-secondary);
-}
+} 
 
-.feature-item, .privacy-section {
+.privacy-section p{
   margin: 1.5rem 0;
 }
 
@@ -943,10 +947,15 @@
       right: 1rem;
       top: 2rem;
       font-size: 1.3rem;
+      -webkit-tap-highlight-color: transparent; /* Hides the blue tap highlight */
     }
 
     .modal-content {
       max-height: 85vh;
+    }
+
+    .modal-form textarea {
+      min-height: 95px;
     }
     
     .modal-header,
