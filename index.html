@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>VLE QBANKS</title>
-    <meta name="description" content="Test your medical knowledge with our comprehensive question banks">
+    <title>vetHQ - Veterinary Question Banks</title>
+    <meta name="description" content="Test your veterinary medicine knowledge with our comprehensive question banks">
     
     <!-- Preload critical resources -->
     <link rel="preload" href="styles.css" as="style">
     <link rel="preload" href="app.js" as="script">
     
     <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/icons/app-icon.png" type="image/nx-ico">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     
     <!-- CSS -->
@@ -32,12 +32,15 @@
 
     <header aria-label="Application header">
         <div class="header-top">
-            <h1>VLE QBANKS</h1>
+            <div class="header-branding">
+                <img src="/icons/app-icon.png" alt="" class="app-icon" width="40" height="40">
+                <h1>vetHQ</h1>
+            </div>  
             <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
                 <span class="theme-icon">🌓</span>
             </button>
         </div>
-        <p class="tagline">Veterinary Licensure Examination Question Banks</p>
+        <p class="tagline">Your Headquarters for Veterinary Exam Mastery!</p>
     </header>
 
     <main class="subject-grid" aria-busy="false">

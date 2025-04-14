@@ -229,12 +229,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const page = link.textContent.toLowerCase();
             
             if (page.includes('about')) {
-                createModal('About VLE QBANKS', `
-                    <p>VLE QBANKS is a comprehensive veterinary medicine quiz platform designed to help students prepare for exams.</p>
+                createModal('About ClinicQ', `
+                    <p>ClinicQ is your ultimate exam revision partner, offering a powerful quiz platform designed specifically for veterinary students preparing for licensure and board exams.</p><br>
+                    <p>✅ <strong>High-Yield Questions</strong> – Test your knowledge with expertly crafted questions covering all key topics.</p>  
+                    <p>✅ <strong>Personalized Learning</strong> – Focus on weak areas with adaptive quizzes and performance tracking. <i>Under development</i></p>  
+                    <p>✅ <strong>Exam-Ready Confidence</strong> – Simulate real test conditions to boost speed and accuracy.</p>  
+
+                    <br><p>Built by a <strong>veterinary professional</strong>, ClinicQ ensures you study <strong>smarter, not harder</strong>—so you can walk into your exam with confidence.</p>  
+
+                    <br><p>🚀 <strong>Start mastering veterinary medicine—one question at a time.</strong></p>                   
                     <div class="features-grid">
                         <div class="feature-item">
                             <strong>Version</strong>
-                            <p>1.2.0</p>
+                            <p>1.0.3</p>
                         </div>
                         <div class="feature-item">
                             <strong>Subjects</strong>
@@ -314,6 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
         state.hasAnswered = false;
         state.selectedChoice = null;
         
+        // Start with hidden elements
+        elements.questionContainer.style.opacity = '0';
+        elements.choicesContainer.style.opacity = '0';
+        
         // Reset UI state
         elements.submitBtn.disabled = true;
         elements.submitBtn.textContent = "Submit";
@@ -321,12 +332,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Clear previous choices
         elements.choicesContainer.innerHTML = '';
-
+    
         const currentQuestion = state.shuffledQuestions[state.currentQuestionIndex];
         elements.questionElement.textContent = currentQuestion.question;
         elements.currentNumber.textContent = state.currentQuestionIndex + 1;
         updateProgressBar();
-
+    
         state.currentChoices = [...currentQuestion.choices];
         const shuffledChoices = shuffleArray([...currentQuestion.choices]);
         
@@ -347,6 +358,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             elements.choicesContainer.appendChild(button);
         });
+        
+        // Trigger reflow and then animate in
+        setTimeout(() => {
+            elements.questionContainer.style.opacity = '1';
+            elements.choicesContainer.style.opacity = '1';
+        }, 10);
     }
 
     function selectChoice(button, choice) {
@@ -405,12 +422,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Transform submit button to continue button
-        elements.submitBtn.textContent = "Next";
+        elements.submitBtn.textContent = "Continue";
         elements.submitBtn.removeEventListener('click', checkAnswer);
         elements.submitBtn.addEventListener('click', continueToNextQuestion);
     }
 
     function continueToNextQuestion() {
+        // Scroll to top smoothly
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        
         elements.feedback.classList.add('hidden');
         elements.submitBtn.textContent = "Submit";
         elements.submitBtn.removeEventListener('click', continueToNextQuestion);
@@ -548,7 +571,9 @@ document.addEventListener('DOMContentLoaded', () => {
         finalTime: document.getElementById('final-time'),
         accuracy: document.getElementById('accuracy'),
         loadingSpinner: document.getElementById('loading-spinner'),
-        errorMessage: document.getElementById('error-message')
+        errorMessage: document.getElementById('error-message'),
+        questionContainer: document.querySelector('.question-container'),
+        choicesContainer: document.getElementById('choices')
     };
 
     // ===== EVENT LISTENERS =====
