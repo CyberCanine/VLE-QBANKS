@@ -229,15 +229,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const page = link.textContent.toLowerCase();
             
             if (page.includes('about')) {
-                createModal('About ClinicQ', `
-                    <p>ClinicQ is your ultimate exam revision partner, offering a powerful quiz platform designed specifically for veterinary students preparing for licensure and board exams.</p><br>
+                createModal('About', `
+                    <p><strong>VetHQ</strong> is your ultimate exam revision partner, offering a powerful quiz platform designed specifically for veterinary students preparing for licensure exam.</p><br>
                     <p>✅ <strong>High-Yield Questions</strong> – Test your knowledge with expertly crafted questions covering all key topics.</p>  
-                    <p>✅ <strong>Personalized Learning</strong> – Focus on weak areas with adaptive quizzes and performance tracking. <i>Under development</i></p>  
                     <p>✅ <strong>Exam-Ready Confidence</strong> – Simulate real test conditions to boost speed and accuracy.</p>  
 
-                    <br><p>Built by a <strong>veterinary professional</strong>, ClinicQ ensures you study <strong>smarter, not harder</strong>—so you can walk into your exam with confidence.</p>  
+                    <br><p>Built by a <strong>veterinary professional</strong>, VetHQ ensures you study <strong>smarter, not harder</strong>—so you can walk into your exam with confidence.</p>  
 
-                    <br><p>🚀 <strong>Start mastering veterinary medicine—one question at a time.</strong></p>                   
+                    <br><p>🚀 Start mastering veterinary medicine—one question at a time.</p>                   
                     <div class="features-grid">
                         <div class="feature-item">
                             <strong>Version</strong>

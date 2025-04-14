@@ -1019,12 +1019,12 @@ margin-bottom: 1.5rem;
   }
 
   .header-info {
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--space-sm);
   }
 
   .timer-container, .score-container {
-    min-width: auto;
+    min-width: 130px;
     width: 100%;
   }
 
@@ -1073,10 +1073,6 @@ margin-bottom: 1.5rem;
     --space-lg: 1.5rem;
   }
 
-  /* .action-buttons {
-    flex-direction: column;
-  } */
-
   .choice-btn {
     padding: var(--space-sm);
   }
@@ -1119,6 +1115,14 @@ margin-bottom: 1.5rem;
 
 .header-branding {
   gap: 8px;
+}
+
+.question-container #question{
+  font-size: var(--text-lg);
+}
+
+#feedback-text {
+  font-size: var(--text-base);
 }
 }
 
