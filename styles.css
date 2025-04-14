@@ -102,6 +102,7 @@ body {
   position: absolute;
   right: 2rem;
   top: 3rem;
+  -webkit-tap-highlight-color: transparent; /* Hides the blue tap highlight */
 }
 
 .theme-toggle:hover {
@@ -1064,6 +1065,14 @@ margin-bottom: 1.5rem;
 }
   .header-branding h1 {
     font-size: 1.5rem;
+}
+
+.question-container #question{
+  font-size: var(--text-lg);
+}
+
+#feedback-text {
+  font-size: var(--text-base);
 }
 }
 
