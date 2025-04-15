@@ -21,20 +21,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ===== THEME TOGGLE =====
-    const initializeTheme = () => {
+    function initializeTheme() {
         const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
-            const savedTheme = localStorage.getItem('darkMode');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme === 'true' || (savedTheme === null && prefersDark)) {
-                document.documentElement.classList.add('dark-mode');
-            }
-            themeToggle.addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark-mode');
-                localStorage.setItem('darkMode', document.documentElement.classList.contains('dark-mode'));
-            });
+        if (!themeToggle) return;
+      
+        // Check saved theme or prefer-color-scheme
+        const savedTheme = localStorage.getItem('darkMode');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Set initial theme
+        if (savedTheme === 'true' || (savedTheme === null && prefersDark)) {
+          document.documentElement.classList.add('dark-mode');
+          themeToggle.setAttribute('aria-pressed', 'true');
+        } else {
+          themeToggle.setAttribute('aria-pressed', 'false');
         }
-    };
+      
+        // Toggle theme on click
+        themeToggle.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.toggle('dark-mode');
+          localStorage.setItem('darkMode', isDark);
+          themeToggle.setAttribute('aria-pressed', isDark.toString());
+          
+          // Add animation class for smooth transition
+          document.documentElement.classList.add('theme-transition');
+          setTimeout(() => {
+            document.documentElement.classList.remove('theme-transition');
+          }, 750);
+        });
+      
+        // Watch for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+          if (localStorage.getItem('darkMode') !== null) return;
+          const isDark = e.matches;
+          document.documentElement.classList.toggle('dark-mode', isDark);
+          themeToggle.setAttribute('aria-pressed', isDark.toString());
+        });
+      }
 
     // ===== CLOUDFLARE WORKER INTEGRATION =====
     async function loadQuestions(sheetId, sheetName) {
@@ -485,6 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Setup end screen listeners
         setupEndScreenListeners();
+        setupEventListeners();
     }
 
     // ===== UI FUNCTIONS =====
@@ -550,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         });
     }
-
+    
     // ===== DOM ELEMENTS =====
     const elements = {
         quizSubject: document.getElementById('quiz-subject'),

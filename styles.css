@@ -53,6 +53,9 @@
   /* Correct & Incorrect Answer Styling */
   --correct-light: rgba(46, 125, 50, 0.1);
   --incorrect-light: rgba(198, 40, 40, 0.1);
+
+  /* Theme Tansition */
+  --transition-theme: 0.75s ease;
 }
 
 /* Dark Mode Overrides */
@@ -77,6 +80,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  --webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -95,14 +99,20 @@ body {
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 1.5rem;
   padding: var(--space-xs);
   transition: transform var(--transition-fast);
   color: var(--text-primary);
   position: absolute;
   right: 2rem;
   top: 3rem;
-  -webkit-tap-highlight-color: transparent; /* Hides the blue tap highlight */
+  -webkit-tap-highlight-color: transparent;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* overflow: hidden; */
+  --webkit-tap-highlight-color: transparent;
 }
 
 .theme-toggle:hover {
@@ -110,7 +120,47 @@ body {
 }
 
 .theme-toggle:active {
-  transform: scale(0.9);
+  transform: scale(0.95);
+}
+
+.theme-toggle svg {
+  transition: transform 0.75s ease;
+  will-change: transform;
+  transform-origin: center;
+}
+
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background: var(--accent-primary); */
+  opacity: 0;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+.theme-toggle:active::after {
+  opacity: 0.2;
+  transform: scale(1);
+}
+
+.dark-mode .theme-toggle svg {
+  transform: rotate(180deg);
+}
+
+/* Add this for smooth theme transitions */
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: 
+    background-color var(--transition-theme),
+    color var(--transition-theme),
+    border-color var(--transition-theme),
+    box-shadow var(--transition-theme);
 }
 
 /* ===== Header Styles ===== */
@@ -1038,14 +1088,6 @@ margin-bottom: 1.5rem;
     gap: var(--space-sm);
   }
 
-  .theme-toggle {
-    position: absolute;
-    right: 1rem;
-    top: 2rem;
-    font-size: 1.3rem;
-    -webkit-tap-highlight-color: transparent; /* Hides the blue tap highlight */
-  }
-
   .modal-content {
     max-height: 85vh;
   }
@@ -1073,6 +1115,11 @@ margin-bottom: 1.5rem;
 
 #feedback-text {
   font-size: var(--text-base);
+}
+
+.theme-toggle{
+  top: 2rem;
+  right: 1.3rem;
 }
 }
 
@@ -1133,6 +1180,10 @@ margin-bottom: 1.5rem;
 #feedback-text {
   font-size: var(--text-base);
 }
+.theme-toggle{
+  top: 2rem;
+  right: 1.3rem;
+}
 }
 
 /* ===== Reduced Motion ===== */
@@ -1153,11 +1204,15 @@ margin-bottom: 1.5rem;
     scroll-behavior: auto;
 }
 
-.quiz-container {
-    scroll-margin-top: 80px; /* Adjust based on your header height */
-}
+  .quiz-container {
+      scroll-margin-top: 80px; /* Adjust based on your header height */
+  }
 
-.question-container, .choices-container {
-  animation: none;
-}
+  .question-container, .choices-container {
+    animation: none;
+  }
+
+  .theme-toggle svg {
+    transition: none;
+  }
 }
