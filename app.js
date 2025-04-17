@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const themeToggle = document.getElementById('theme-toggle');
         if (!themeToggle) return;
       
-        // Check saved theme or prefer-color-scheme
+        // Check saved theme or prefers-color-scheme
         const savedTheme = localStorage.getItem('darkMode');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
           themeToggle.setAttribute('aria-pressed', isDark.toString());
         });
       }
-
+      
     // ===== CLOUDFLARE WORKER INTEGRATION =====
     async function loadQuestions(sheetId, sheetName) {
         try {
@@ -287,17 +287,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             else if (page.includes('privacy')) {
                 createModal('Privacy Policy', `
-                    <div class="privacy-section">
+                    <div class="privacy-section section-1">
                         <h3>Data Collection</h3>
                         <p>We only store quiz progress locally in your browser. No personal data is collected or shared with third parties.</p>
                     </div>
                     
-                    <div class="privacy-section">
+                    <div class="privacy-section section-2">
                         <h3>Cookies</h3>
                         <p>This app uses localStorage to save your progress, but doesn't use tracking cookies or analytics tools.</p>
                     </div>
                     
-                    <div class="privacy-section">
+                    <div class="privacy-section section-3">
                         <h3>Third Party Services</h3>
                         <p>We load questions from Google Sheets, but don't share any user data with them. All processing happens in your browser.</p>
                     </div>
