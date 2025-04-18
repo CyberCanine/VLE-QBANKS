@@ -11,7 +11,8 @@
     <link rel="preload" href="app.js" as="script">
     
     <!-- Favicon -->
-    <link rel="icon" href="/icons/app-icon.png" type="image/nx-ico">
+    <link rel="icon" href="/icons/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/icons/app-icon.png" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     
     <!-- CSS -->
@@ -19,6 +20,7 @@
     
     <!-- Preconnect to Google Sheets API -->
     <link rel="preconnect" href="https://docs.google.com">
+    <link rel="dns-prefetch" href="https://docs.google.com">
 </head>
 <body>
     <!-- Loading Spinner -->
@@ -33,7 +35,7 @@
     <header aria-label="Application header">
         <div class="header-top">
             <div class="header-branding">
-                <img src="/icons/app-icon.png" alt="" class="app-icon" width="40" height="40">
+                <img src="/icons/app-icon.png" alt="VetHQ logo" class="app-icon" width="40" height="40">
                 <h1>VetHQ</h1>
             </div>  
                 <button id="theme-toggle" class="theme-toggle" type="button" title="Toggle theme" aria-label="Toggle theme">
@@ -53,73 +55,73 @@
 
     <main class="subject-grid" aria-busy="false">
         <!-- Anatomy -->
-        <button class="subject-btn" data-subject="anatomy" data-sheet="Anatomy" aria-labelledby="anatomy-title">
+        <button class="subject-btn" data-subject="Anatomy" data-sheet="Anatomy" aria-labelledby="anatomy-title">
             <div class="button-content">
-                <img src="icons/anatomy.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/anatomy.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="anatomy-title">Anatomy</span>
             </div>
         </button>
 
         <!-- Physiology -->
-        <button class="subject-btn" data-subject="physiology" data-sheet="Physiology" aria-labelledby="physiology-title">
+        <button class="subject-btn" data-subject="Physiology" data-sheet="Physiology" aria-labelledby="physiology-title">
             <div class="button-content">
-                <img src="icons/physiology.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/physiology.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="physiology-title">Physiology</span>
             </div>
         </button>
 
         <!-- Parasitology -->
-        <button class="subject-btn" data-subject="parasitology" data-sheet="Parasitology" aria-labelledby="parasitology-title">
+        <button class="subject-btn" data-subject="Parasitology" data-sheet="Parasitology" aria-labelledby="parasitology-title">
             <div class="button-content">
-                <img src="icons/parasitology.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/parasitology.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="parasitology-title">Parasitology</span>
             </div>
         </button>
 
         <!-- Pharmacology -->
-        <button class="subject-btn" data-subject="pharmacology" data-sheet="Pharmacology" aria-labelledby="pharmacology-title">
+        <button class="subject-btn" data-subject="Pharmacology" data-sheet="Pharmacology" aria-labelledby="pharmacology-title">
             <div class="button-content">
-                <img src="icons/pharmacology.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/pharmacology.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="pharmacology-title">Pharmacology</span>
             </div>
         </button>
 
         <!-- Pathology -->
-        <button class="subject-btn" data-subject="pathology" data-sheet="Pathology" aria-labelledby="pathology-title">
+        <button class="subject-btn" data-subject="Pathology" data-sheet="Pathology" aria-labelledby="pathology-title">
             <div class="button-content">
-                <img src="icons/pathology.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/pathology.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="pathology-title">Pathology</span>
             </div>
         </button>
 
         <!-- Zootechnics -->
-        <button class="subject-btn" data-subject="zootechnics" data-sheet="Zootechnics" aria-labelledby="zootechnics-title">
+        <button class="subject-btn" data-subject="Zootechnics" data-sheet="Zootechnics" aria-labelledby="zootechnics-title">
             <div class="button-content">
-                <img src="icons/zootechnics.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/zootechnics.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="zootechnics-title">Zootechnics</span>
             </div>
         </button>
 
         <!-- Microbiology & Public Health -->
-        <button class="subject-btn" data-subject="microbiology&ph" data-sheet="Microbiology_PH" aria-labelledby="microbiology-title">
+        <button class="subject-btn" data-subject="Microbiology & PH" data-sheet="Microbiology_PH" aria-labelledby="microbiology-title">
             <div class="button-content">
-                <img src="icons/microbiology&ph.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/microbiology&ph.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="microbiology-title">Microbiology & Public Health</span>
             </div>
         </button>
 
         <!-- Medicine -->
-        <button class="subject-btn" data-subject="medicine" data-sheet="Medicine" aria-labelledby="medicine-title">
+        <button class="subject-btn" data-subject="Medicine" data-sheet="Medicine" aria-labelledby="medicine-title">
             <div class="button-content">
-                <img src="icons/medicine.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/medicine.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="medicine-title">Medicine</span>
             </div>
         </button>
 
         <!-- Surgery -->
-        <button class="subject-btn" data-subject="surgery" data-sheet="Surgery" aria-labelledby="surgery-title">
+        <button class="subject-btn" data-subject="Surgery" data-sheet="Surgery" aria-labelledby="surgery-title">
             <div class="button-content">
-                <img src="icons/surgery.png" alt="" class="subject-icon" loading="lazy">
+                <img src="icons/surgery.png" alt="" class="subject-icon" loading="lazy" role="presentation">
                 <span class="subject-title" id="surgery-title">Surgery</span>
             </div>
         </button>
@@ -146,13 +148,36 @@
         document.getElementById('current-year').textContent = new Date().getFullYear();
         
         // Show loading state while resources are loading
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('readystatechange', () => {
             const spinner = document.getElementById('loading-spinner');
-            spinner.classList.remove('hidden');
-            
-            window.addEventListener('load', () => {
+            if (document.readyState === 'loading') {
+                spinner.classList.remove('hidden');
+            } else {
                 spinner.classList.add('hidden');
-            });
+            }
+        });
+
+        function handleBackNavigation() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            document.documentElement.classList.toggle('dark-mode', isDark);
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.setAttribute('aria-pressed', isDark.toString());
+            }
+        }
+
+        // Check theme when page becomes visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                handleBackNavigation();
+            }
+        });
+
+        // Also check when page is restored from cache
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                handleBackNavigation();
+            }
         });
     </script>
 </body>

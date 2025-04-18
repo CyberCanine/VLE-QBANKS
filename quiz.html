@@ -113,6 +113,29 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js" defer>
+        function handleBackNavigation() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            document.documentElement.classList.toggle('dark-mode', isDark);
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.setAttribute('aria-pressed', isDark.toString());
+            }
+        }
+
+        // Check theme when page becomes visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                handleBackNavigation();
+            }
+        });
+
+        // Also check when page is restored from cache
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                handleBackNavigation();
+            }
+        });
+    </script>
 </body>
 </html>
