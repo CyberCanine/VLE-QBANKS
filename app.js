@@ -451,9 +451,9 @@ function createModal(title, content, hasForm = false) {
     
     modal.innerHTML = `
         <div class="modal-content">
-            <button class="close-modal" aria-label="Close modal">&times;</button>
             <div class="modal-header">
                 <h2>${title}</h2>
+                <button class="close-modal" aria-label="Close modal">&times;</button>
             </div>
             <div class="modal-body">
                 ${content}
