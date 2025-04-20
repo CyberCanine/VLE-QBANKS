@@ -298,31 +298,98 @@ function reviewQuiz() {
     
     elements.endScreen.innerHTML = `
         <div class="end-content">
-            <h2>Quiz Review: ${results.subject}</h2>
-            <p class="review-score">Score: ${results.score}/${results.totalQuestions}</p>
-            <div class="review-questions">
+            <div class="review-header">
+                <h2>Quiz Review: ${results.subject}</h2>
+                <div class="review-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">${results.score}/${results.totalQuestions}</span>
+                        <span class="stat-label">Score</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">${((results.score / results.totalQuestions) * 100).toFixed(1)}%</span>
+                        <span class="stat-label">Accuracy</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="review-controls">
+                <button id="back-to-results" class="review-control-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back to Results
+                </button>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All</button>
+                    <button class="filter-tab" data-filter="correct">Correct</button>
+                    <button class="filter-tab" data-filter="incorrect">Incorrect</button>
+                </div>
+            </div>
+            
+            <div class="review-questions-container">
                 ${results.answeredQuestions.map((q, i) => `
-                    <div class="review-item">
-                        <p class="review-question">${i+1}. ${q.question}</p>
-                        <p class="review-answer ${q.isCorrect ? 'review-correct' : 'review-incorrect'}">
-                            Your answer: ${q.selectedAnswer}
-                        </p>
-                        ${!q.isCorrect ? `
-                            <p class="review-correct-answer">
-                                Correct answer: ${q.correctAnswer}
-                            </p>
-                        ` : ''}
+                    <div class="review-item ${q.isCorrect ? 'correct' : 'incorrect'}" data-correct="${q.isCorrect}">
+                        <div class="question-header">
+                            <span class="question-number">Question ${i+1}</span>
+                            <span class="question-status ${q.isCorrect ? 'correct' : 'incorrect'}">
+                                ${q.isCorrect ? '✓ Correct' : '✗ Incorrect'}
+                            </span>
+                        </div>
+                        <p class="review-question">${q.question}</p>
+                        
+                        <div class="answer-section">
+                            <div class="user-answer ${q.isCorrect ? 'correct' : 'incorrect'}">
+                                <span class="answer-label">Your answer:</span>
+                                <span class="answer-text">${q.selectedAnswer}</span>
+                            </div>
+                            
+                            ${!q.isCorrect ? `
+                            <div class="correct-answer">
+                                <span class="answer-label">Correct answer:</span>
+                                <span class="answer-text">${q.correctAnswer}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
                         ${q.explanation ? `
-                            <p class="review-explanation">
-                                <strong>Explanation:</strong> ${q.explanation}
-                            </p>
+                        <div class="explanation-section">
+                            <div class="explanation-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                                <span>Explanation</span>
+                            </div>
+                            <p class="explanation-text">${q.explanation}</p>
+                        </div>
                         ` : ''}
                     </div>
                 `).join('')}
             </div>
-            <button id="back-to-results" class="quiz-btn">Back to Results</button>
         </div>
     `;
+    
+    // Add filter functionality
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            const filter = tab.dataset.filter;
+            document.querySelectorAll('.review-item').forEach(item => {
+                if (filter === 'all') {
+                    item.style.display = 'block';
+                } else {
+                    const shouldShow = filter === 'correct' 
+                        ? item.dataset.correct === 'true'
+                        : item.dataset.correct === 'false';
+                    item.style.display = shouldShow ? 'block' : 'none';
+                }
+            });
+        });
+    });
     
     document.getElementById('back-to-results').addEventListener('click', () => {
         elements.endScreen.innerHTML = originalEndContent;
